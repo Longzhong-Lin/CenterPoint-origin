@@ -2,10 +2,10 @@
 **build**
 **egg-info**
 **dist**
+**work_dirs**
 data/
-work_dirs/
-*.pyc
 venv/
+*.pyc
 *.idea/
 *.so
 *.yaml
