@@ -174,7 +174,7 @@ data = dict(
         nsweeps=nsweeps,
         class_names=class_names,
         pipeline=train_pipeline,
-        version="v1.0-mini"
+        version="v1.0-mini",
     ),
     val=dict(
         type=dataset_type,
@@ -185,17 +185,18 @@ data = dict(
         nsweeps=nsweeps,
         class_names=class_names,
         pipeline=test_pipeline,
-        version="v1.0-mini"
+        version="v1.0-mini",
     ),
     test=dict(
         type=dataset_type,
         root_path=data_root,
         info_path=test_anno,
+        test_mode=True,
         ann_file=test_anno,
         nsweeps=nsweeps,
         class_names=class_names,
         pipeline=test_pipeline,
-        version="v1.0-test"
+        version="v1.0-test",
     ),
 )
 
