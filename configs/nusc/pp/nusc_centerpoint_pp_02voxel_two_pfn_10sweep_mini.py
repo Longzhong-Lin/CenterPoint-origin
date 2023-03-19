@@ -189,7 +189,7 @@ data = dict(
     ),
     test=dict(
         type=dataset_type,
-        root_path=data_root,
+        root_path=data_root+"/v1.0-test",
         info_path=test_anno,
         test_mode=True,
         ann_file=test_anno,
