@@ -18,6 +18,7 @@ from nuscenes import NuScenes
 import json 
 import time
 from nuscenes.utils import splits
+from tqdm import tqdm
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Tracking Evaluation")
@@ -35,13 +36,14 @@ def parse_args():
     return args
 
 
-def save_first_frame():
-    args = parse_args()
+def save_first_frame(args):
     nusc = NuScenes(version=args.version, dataroot=args.root, verbose=True)
     if args.version == 'v1.0-trainval':
         scenes = splits.val
     elif args.version == 'v1.0-test':
         scenes = splits.test 
+    elif args.version == 'v1.0-mini':
+        scenes = splits.mini_val
     else:
         raise ValueError("unknown")
 
@@ -74,8 +76,7 @@ def save_first_frame():
         json.dump({'frames': frames}, f)
 
 
-def main():
-    args = parse_args()
+def main(args):
     print('Deploy OK')
 
     tracker = Tracker(max_age=args.max_age, hungarian=args.hungarian)
@@ -94,7 +95,7 @@ def main():
 
     print("Begin Tracking\n")
     start = time.time()
-    for i in range(size):
+    for i in tqdm(range(size)):
         token = frames[i]['token']
 
         # reset tracking after one video sequence
@@ -152,15 +153,25 @@ def main():
         json.dump(nusc_annos, f)
     return speed
 
-def eval_tracking():
-    args = parse_args()
-    eval(os.path.join(args.work_dir, 'tracking_result.json'),
-        "val",
-        args.work_dir,
-        args.root
+def eval_tracking(args):
+    if args.version == 'v1.0-trainval':
+        eval_set = "val"
+    elif args.version == 'v1.0-test':
+        eval_set = "test"
+    elif args.version == 'v1.0-mini':
+        eval_set = "mini_val"
+    else:
+        raise ValueError("unknown")
+    
+    eval(
+        res_path=os.path.join(args.work_dir, 'tracking_result.json'),
+        eval_set=eval_set,
+        version=args.version,
+        output_dir=args.work_dir,
+        root_path=args.root
     )
 
-def eval(res_path, eval_set="val", output_dir=None, root_path=None):
+def eval(res_path, eval_set="val", version="v1.0-trainval", output_dir=None, root_path=None):
     from nuscenes.eval.tracking.evaluate import TrackingEval 
     from nuscenes.eval.common.config import config_factory as track_configs
 
@@ -172,7 +183,7 @@ def eval(res_path, eval_set="val", output_dir=None, root_path=None):
         eval_set=eval_set,
         output_dir=output_dir,
         verbose=True,
-        nusc_version="v1.0-trainval",
+        nusc_version=version,
         nusc_dataroot=root_path,
     )
     metrics_summary = nusc_eval.main()
@@ -186,7 +197,8 @@ def test_time():
     print("Speed is {} FPS".format( max(speeds)  ))
 
 if __name__ == '__main__':
-    save_first_frame()
-    main()
+    args = parse_args()
+    save_first_frame(args)
+    main(args)
     # test_time()
-    eval_tracking()
+    eval_tracking(args)
