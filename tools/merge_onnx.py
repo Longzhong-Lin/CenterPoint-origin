@@ -79,7 +79,7 @@ if __name__ == "__main__":
     rpn_input_conv_name = "Conv_15"
     pfe_out_maxpool_name = "46"
     rpn_input_shape = [batch_size,64,512,512]
-    indices_shape = [batch_size, 30000,2]
+    indices_shape = [batch_size,30000,2]
 
     for node in encoder.graph.node:
         node.name = "pfe_" + node.name
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     change_input(full_model)
     change_input(trt_model)
 
-    onnx.save(encoder, model_path)
+    onnx.save(full_model, model_path)
     onnx.save(trt_model, trt_model_path)
 
     print("===========Model Merged===========")
