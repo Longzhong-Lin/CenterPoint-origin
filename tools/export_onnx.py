@@ -56,7 +56,7 @@ class Decoder(nn.Module):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Train a detector")
+    parser = argparse.ArgumentParser(description="Export onnx")
     parser.add_argument(
         "--config", help="train config file path",
         default='configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_mini_onnx.py'
