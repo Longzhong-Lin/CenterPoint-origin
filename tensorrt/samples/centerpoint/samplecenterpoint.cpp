@@ -294,6 +294,25 @@ bool SampleCenterPoint::infer()
         sample::gLogInfo << "inferenceDuration Time: " << inferenceDuration << " ms"<< std::endl;
         sample::gLogInfo << "PostProcessDuration Time: " << PostProcessDuration << " ms"<< std::endl;
 
+        /* save preprocessed files */
+        // std::string::size_type pos = filePath[idx].find_last_of("/");
+
+        // std::string featureFilePath("../"+mParams.dataDirs[0]+"/feature/"+ filePath[idx].substr(pos) + ".txt");
+        // ofstream featureFile;
+        // featureFile.open(featureFilePath);
+        // for(int idx=0; idx< MAX_PILLARS*FEATURE_NUM*MAX_PIONT_IN_PILLARS; idx++){
+        //     featureFile << hostPillars[idx] << " ";
+        // }
+        // featureFile.close();
+
+        // std::string indicesFilePath("../"+mParams.dataDirs[0]+"/indices/"+ filePath[idx].substr(pos) + ".txt");
+        // ofstream indicesFile;
+        // indicesFile.open(indicesFilePath);
+        // for(int idx=0; idx< MAX_PILLARS*2; idx++){
+        //     indicesFile << hostIndex[idx] << " ";
+        // }
+        // indicesFile.close();
+
         saveOutput(predResult, filePath[idx]);
 
         free(points);  
