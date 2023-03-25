@@ -215,9 +215,8 @@ def postprocess(ort_outputs):
     heightName = ["598", "622", "646", "670", "694", "718"]
     rotName = ["606", "630", "654", "678", "702", "726"]
     velName = ["610", "634", "658", "682", "706", "730"]
-    dimName = ["736", "740", "744", "748", "752", "756"]
-    scoreName = ["737", "741", "745", "749", "753", "757"]
-    clsName = ["738", "742", "746", "750", "754", "758"]
+    dimName = ["736", "738", "740", "742", "744", "746"]
+    hmName = ["735", "737", "739", "741", "743", "745"]
     clsOffsetPerTask = [0, 1, 3, 5, 6, 8]
     
     final_outputs = {
@@ -232,8 +231,9 @@ def postprocess(ort_outputs):
         rot = ort_outputs[rotName[taskIdx]][0]
         vel = ort_outputs[velName[taskIdx]][0]
         dim = ort_outputs[dimName[taskIdx]][0]
-        score = ort_outputs[scoreName[taskIdx]][0]
-        cls = ort_outputs[clsName[taskIdx]][0]
+        hm = ort_outputs[hmName[taskIdx]][0]
+        score = np.max(hm, axis=0)
+        cls = np.argmax(hm, axis=0)
 
         xIdx = np.arange(OUTPUT_W)[None]
         yIdx = np.arange(OUTPUT_H)[:, None]

@@ -47,10 +47,10 @@ class Decoder(nn.Module):
         x = self.model.neck(x)
         preds, _ = self.model.bbox_head(x)
         for task in range(len(preds)):
-            hm_preds = torch.sigmoid(preds[task]['hm'])
+            preds[task]['hm'] = torch.sigmoid(preds[task]['hm'])
             preds[task]['dim'] = torch.exp(preds[task]['dim'])
-            scores, labels = torch.max(hm_preds, dim=1)
-            preds[task]["hm"] = (scores, labels)
+            # scores, labels = torch.max(hm_preds, dim=1)
+            # preds[task]["hm"] = (scores, labels)
 
         return preds
 

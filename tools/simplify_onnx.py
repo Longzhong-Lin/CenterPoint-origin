@@ -126,24 +126,25 @@ if __name__ == "__main__":
             node.input[0] = delete_dict[node.input[0]].input[0]
         
         if node.op_type == "MatMul":
-            # node.op_type = "Conv"
-            # matmul_to_conv2d(node, init_dict)
-            rm_list.append(node)
-            matmul_to_conv2d(node, encoder, init_dict)
-            # transpose_node_1 = helper.make_node(
-            #     op_type="Transpose", inputs=[node.input[0]], \
-            #     outputs=[node.name+'_transpose_1'], name=node.name+"_Transpose_1", \
-            #     perm=[0,3,2,1]
-            # )
-            # node.input[0] = transpose_node_1.output[0]
-            # transpose_node_2 = helper.make_node(
-            #     op_type="Transpose", inputs=[node.name+'_transpose_2'], \
-            #     outputs=node.output, name=node.name+"_Transpose_2", \
-            #     perm=[0,3,2,1]
-            # )
-            # node.output[0] = transpose_node_2.input[0]
-            # encoder.graph.node.append(transpose_node_1)
-            # encoder.graph.node.append(transpose_node_2)
+            # MatMul to Conv
+            # rm_list.append(node)
+            # matmul_to_conv2d(node, encoder, init_dict)
+            
+            # add Transpose
+            transpose_node_1 = helper.make_node(
+                op_type="Transpose", inputs=[node.input[0]], \
+                outputs=[node.name+'_transpose_1'], name=node.name+"_Transpose_1", \
+                perm=[0,3,2,1]
+            )
+            node.input[0] = transpose_node_1.output[0]
+            transpose_node_2 = helper.make_node(
+                op_type="Transpose", inputs=[node.name+'_transpose_2'], \
+                outputs=node.output, name=node.name+"_Transpose_2", \
+                perm=[0,3,2,1]
+            )
+            node.output[0] = transpose_node_2.input[0]
+            encoder.graph.node.append(transpose_node_1)
+            encoder.graph.node.append(transpose_node_2)
             
         if node.op_type == "ReduceMax":
             rm_list.append(node)
